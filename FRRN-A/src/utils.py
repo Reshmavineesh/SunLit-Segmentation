@@ -65,6 +65,16 @@ def soft_dice_loss(y_true, y_pred):
     return 1 - dice_coef(y_true, y_pred)
 
 
+def randomOutput(image_path, mask_path, model):
+    input_name = sample(os.listdir(image_path), 1)[0]
+    mask_name = input_name.replace(".jpg", "_L.png")
+    input_image = imread(image_path + input_name)
+    input_image = np.asarray([input_image])
+    mask_image = imread(mask_path + mask_name)
+    output_image = model.predict(input_image)[0][:, :, 0]
+    return input_image, mask_image, output_image
+
+
 def analyzer(
     history, model, img_path, msk_path, test_images, test_masks, train_attr=""
 ):
@@ -100,19 +110,16 @@ def analyzer(
     result = model.evaluate(test_images, test_masks)
     print(f"Loss:\t\t{result[0]*100:.2f}%\nAccuracy:\t{result[1]*100:.2f}%")
 
-    image = sample(os.listdir(img_path), 1)[0]
-    mask = image.replace(".jpg", "_L.png")
-    input = imread(img_path + image)
-    input = np.asarray([input])
-    truth = imread(msk_path + mask)
-    output = model.predict(input)[0][:, :, 0]
-    fig, axs = plt.subplots(1, 3, figsize=(12, 4))
-    axs[0].imshow(input[0])
-    axs[0].set_title("Image 1")
-    axs[1].imshow(truth, cmap="gray")
-    axs[1].set_title("Image 2")
-    axs[2].imshow(output, cmap="gray")
-    axs[2].set_title("Image 3")
-    for ax in axs:
-        ax.axis("off")
+    fig, axs = plt.subplots(5, 3, figsize=(12, 20))
+    for i in range(5):
+        prediction = randomOutput(img_path, msk_path, model)
+        axs[i, 0].imshow(prediction[0][0])
+        axs[i, 1].imshow(prediction[1], cmap="gray")
+        axs[i, 2].imshow(prediction[2], cmap="gray")
+    
+    plt.subplots_adjust(bottom=0.3)
+    axs[-1, 0].set_xlabel('Input', fontsize=12)
+    axs[-1, 1].set_xlabel('Truth', fontsize=12)
+    axs[-1, 2].set_xlabel('Output', fontsize=12)
+    fig.text(0.5, 0.25, 'Custom Text', ha='center', fontsize=12)
     plt.show()
