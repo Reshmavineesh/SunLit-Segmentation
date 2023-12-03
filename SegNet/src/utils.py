@@ -75,51 +75,41 @@ def randomOutput(image_path, mask_path, model):
     return input_image, mask_image, output_image
 
 
-def analyzer(
-    history, model, img_path, msk_path, test_images, test_masks, train_attr=""
-):
-    plt.figure(figsize=(12, 6))
-    plt.subplot(1, 2, 1)
-    plt.plot(history.history["loss"], label="Training Loss")
-    plt.plot(history.history["val_loss"], label="Validation Loss")
-    plt.title("Model Loss")
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.legend()
-
-    if train_attr != "":
-        plt.text(
-            0.5,
-            0.8,
-            train_attr,
-            horizontalalignment="left",
-            verticalalignment="center",
-            transform=plt.gca().transAxes,
-        )
-
-    plt.subplot(1, 2, 2)
-    plt.plot(history.history["accuracy"], label="Training Accuracy")
-    plt.plot(history.history["val_accuracy"], label="Validation Accuracy")
-    plt.title("Model Accuracy")
-    plt.xlabel("Epoch")
-    plt.ylabel("Accuracy")
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
-
+def analyzer(history, model, img_path, msk_path, test_images, test_masks, train_attr={}):
     result = model.evaluate(test_images, test_masks)
-    print(f"Loss:\t\t{result[0]*100:.2f}%\nAccuracy:\t{result[1]*100:.2f}%")
+    fig, axs = plt.subplots(6, 3, figsize=(20, 30))
+    
+    axs[0, 0].plot(history.history["loss"], label="Training Loss")
+    axs[0, 0].plot(history.history["val_loss"], label="Validation Loss")
+    axs[0, 0].set_title("Model Loss")
+    axs[0, 0].set_xlabel("Epoch")
+    axs[0, 0].set_ylabel("Loss")
+    axs[0, 0].legend()
+    
+    axs[0, 1].plot(history.history["accuracy"], label="Training Accuracy")
+    axs[0, 1].plot(history.history["val_accuracy"], label="Validation Accuracy")
+    axs[0, 1].set_title("Model Accuracy")
+    axs[0, 1].set_xlabel("Epoch")
+    axs[0, 1].set_ylabel("Accuracy")
+    axs[0, 1].legend()
+    
+    train_log = f"Loss: {result[0]:.2f}\nAccuracy: {result[1]:.2f}"
+    if train_attr != {}:
+        train_log += f"\nLearning Rate: {train_attr['lr']}"
+        train_log += f"\nBatch Size: {train_attr['batch_size']}"
+        train_log += f"\nOptimizer: {train_attr['optimizer']}"
+        train_log += f"\nLoss Fn: {train_attr['loss_fn']}"
+    axs[0, 2].text(0.5, 0.5, train_log, ha='right', va='center', fontsize=12)
+    axs[0, 2].axis('off')
 
-    fig, axs = plt.subplots(5, 3, figsize=(12, 20))
-    for i in range(5):
+    
+    for i in range(1,6):
         prediction = randomOutput(img_path, msk_path, model)
         axs[i, 0].imshow(prediction[0][0])
         axs[i, 1].imshow(prediction[1], cmap="gray")
         axs[i, 2].imshow(prediction[2], cmap="gray")
     
-    plt.subplots_adjust(bottom=0.3)
     axs[-1, 0].set_xlabel('Input', fontsize=12)
-    axs[-1, 1].set_xlabel('Truth', fontsize=12)
-    axs[-1, 2].set_xlabel('Output', fontsize=12)
-    fig.text(0.5, 0.25, 'Custom Text', ha='center', fontsize=12)
+    axs[-1, 1].set_xlabel('Ground Truth', fontsize=12)
+    axs[-1, 2].set_xlabel('Predicted', fontsize=12)
     plt.show()
