@@ -33,11 +33,11 @@ unzip -q sunlit-chilly.zip -d ./dataset_chilly &
 unzip -q sunlit-chilly-128.zip -d ./dataset_chilly_128 &
 wait
 
-kaggle datasets download -d pvtsec0x1/pistachio-leaves &
-kaggle datasets download -d pvtsec0x1/tomato-leaves &
-wait
-unzip -q pistachio-leaves.zip -d ./dataset_pistachio_128 &
-unzip -q tomato-leaves.zip -d ./dataset_tomato_128 &
-wait
+# kaggle datasets download -d pvtsec0x1/pistachio-leaves &
+# kaggle datasets download -d pvtsec0x1/tomato-leaves &
+# wait
+# unzip -q pistachio-leaves.zip -d ./dataset_pistachio_128 &
+# unzip -q tomato-leaves.zip -d ./dataset_tomato_128 &
+# wait
 
 rm -rf *.zip
