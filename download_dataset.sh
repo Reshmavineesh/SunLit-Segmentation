@@ -24,9 +24,11 @@ rm -rf dataset; mkdir dataset; cd dataset
 # Download from kaggle and unzip
 kaggle datasets download -d pvtsec0x1/sunlit-pistachio &
 kaggle datasets download -d pvtsec0x1/sunlit-tomato &
+kaggle datasets download -d pvtsec0x1/sunlit-chilly &
 wait
 unzip -q sunlit-pistachio.zip -d ./dataset_pistachio &
 unzip -q sunlit-tomato.zip -d ./dataset_tomato &
+unzip -q sunlit-chilly.zip -d ./dataset_chilly &
 wait
 
 kaggle datasets download -d pvtsec0x1/pistachio-leaves &
