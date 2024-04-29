@@ -1,0 +1,5 @@
+venv
+*.zip
+dataset*
+**/dataset_*
+__pycache__
