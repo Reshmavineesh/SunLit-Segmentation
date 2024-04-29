@@ -71,7 +71,7 @@ dice_loss.get_config = dice_loss_get_config
 
 def randomOutput(image_path, mask_path, model):
     input_name = sample(os.listdir(image_path), 1)[0]
-    mask_name = input_name.replace(".jpg", "_L.png")
+    mask_name = input_name.replace(".jpg", ".png")
     input_image = imread(image_path + input_name)
     input_image = np.asarray([input_image])
     mask_image = imread(mask_path + mask_name)

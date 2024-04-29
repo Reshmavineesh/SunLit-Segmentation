@@ -21,7 +21,7 @@ class LeafDataset(Dataset):
     def __getitem__(self, idx):
         img_name = os.path.join(self.root_dir, "color_images", self.color_images[idx])
         mask_name = os.path.join(
-            self.root_dir, "masks", self.color_images[idx].replace(".jpg", "_L.png")
+            self.root_dir, "masks", self.color_images[idx].replace(".jpg", ".png")
         )
         image = Image.open(img_name)
         mask = Image.open(mask_name)
